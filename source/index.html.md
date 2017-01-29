@@ -1,11 +1,8 @@
 ---
-title: API Reference
+title: Flowroute API Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -19,171 +16,55 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Welcome to the Flowroute API reference documentation. Here you will find specifications for our V1 Number Management Endpoints and our V2 Messages Endpoints. 
 
 # Authentication
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+> Example Request:
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+# With curl, you can use the -u option to include your credentials
+curl -u accessKey:secretKey https://api.flowroute.com/v2/messages/mdr1-2b9c5b0551724ad9a3fdeeb30bab3926
 ```
 
-```javascript
-const kittn = require('kittn');
+> Make sure to replace `accessKey:secretKey` with your credentials from the [Flowroute Manager](https://manage.flowroute.com/accounts/preferences/api/).
 
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+The V2 Flowroute API utilizes Basic Auth via HTTPS to authenticate API requests. Any requests sent via HTTP will fail. 
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>accessKey:secretKey</code> with your personal API credentials from the <a href="https://manage.flowroute.com/accounts/preferences/api/">Flowroute Manager</a>.
 </aside>
 
-# Kittens
+# Messages
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Send a Message
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+curl -u AccessKey:SecretKey \
+	-H "Content-Type: application/json" \
+	-X POST \
+	-d '{"to":"12066418000", "from":"18553569768", "body":"example body"}' \
+	https://api.flowroute.com/v2/messages
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "data": {
+    "id": "mdr1-e3672cb28a9d422a9671945c9bc4eb9a"
+  }
 }
 ```
 
-This endpoint retrieves a specific kitten.
+This API endpoint is used to send a message from one valid phone number to another valid phone number.
+All `to` and `from` phone numbers must use an E.164 format, which is an 11-digit _`1NPANXXXXXX`_-formatted number in North America. While you can send an SMS to any valid North American Numbering Plan Administration (NANPA) phone number, Flowroute cannot guarantee delivery to any phone number not enabled for SMS. Additionally, you are only allowed to send an SMS from an SMS-enabled phone number set up on the Direct Inward Dialing <a href="https://manage.flowroute.com/accounts/dids/" target="blank"> (DIDS > Manage) </a> page. You cannot send an SMS from a phone number not on your Flowroute account.
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+### Body Parameters
 
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+| Field | Description                                                                                                                                                                                                                                                                                                                      | Required |
+|-------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| to    | **String**: Phone number of the message recipient, using an E.164 format, This must be in an E.164 format, which is a North American, 11-digit 1NPANXXXXXX-formatted number.                                                                                                                                                         | True     |
+| from  | **String**: Flowroute phone number to send the message from, using an E.164 format. On the receiver's phone, this is typically referred to as the Caller ID.                                                                                                                                                                         | True     |
+| body  | **String**: The content of the message to deliver. If a message is greater than 160 characters, and the carrier sends header information with the message, the message with be reassembled on the receiver's phone as one message. If header information is not sent by the carrier, the message will be received in multiple parts. | True     |
 

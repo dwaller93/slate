@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # Middleman
+gem "middleman-livereload", "~> 3.4.3"
 gem 'middleman', '~>4.1.0'
 gem 'middleman-syntax', '~> 3.0.0'
 gem 'middleman-autoprefixer', '~> 2.7.0'
